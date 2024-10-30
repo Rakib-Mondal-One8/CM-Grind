@@ -62,17 +62,10 @@ void solve()
 {
 	ll l, r, a;
 	cin >> l >> r >> a;
-	if (r == a) {
-		cout << ((a - 1) / a) + (a - 1) % a << nl;
-		return;
-	}
-	ll i = a - 1;
-	ll ans = 0;
-	while ((a + i) > r)i--;
-	ll val  = ceil((a + i) / a) + ((a + i) % a);
-	ans = max(ans, val);
-	ll val2 = ceil(r / a) + (r % a);
-	ans = max(ans, val2);
+	ll ans = INT_MIN;
+	ans = max(ans, (r / a) + (r % a));
+	ll sec = (r - ((r % a) + 1));
+	if (sec >= l)ans = max(ans, (sec / a) + (sec % a));
 	cout << ans << nl;
 }
 int main()
