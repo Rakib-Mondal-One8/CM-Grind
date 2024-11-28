@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
-/*Problem Link -> */
+/*Problem Link -> https://codeforces.com/problemset/problem/165/B*/
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
@@ -51,6 +51,8 @@ void init_code() {
 	freopen("Error.txt", "w", stderr);
 #endif
 }
+const ll mod = 1e9 + 7;
+ll inv(ll i) {if (i == 1) return 1; return (mod - ((mod / i) * inv(mod % i)) % mod) % mod;}
 bool isPrime(ll n) {if (n <= 1)return false; if (n <= 3)return true; if (n % 2 == 0 || n % 3 == 0)return false; for (ll i = 5; i * i <= n; i += 6) {if (n % i == 0 || n % (i + 2) == 0)return false;} return true;}
 ll lcm(ll a, ll b) {return (a / __gcd(a, b)) * b;}
 int nXOR(int n) {if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 == 2)return n + 1; return 0;}
@@ -58,46 +60,33 @@ int nXOR(int n) {if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 == 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 void solve()
 {
-	ll n, m, k;
-	cin >> n >> m >> k;
+	ll n, k;
+	cin >> n >> k;
 
-	auto ok = [&]() {
-		ll l = 1, r = m;
-		ll ans  = 0;
+	auto go = [&]() {
+		ll l = 1, r = 1e9;
+		ll ans = 0;
 
 		while (l <= r) {
 			ll mid = l + (r - l) / 2;
-			ll rem = m - mid;
-			bool ok = true;
-			ll x = mid - 1;
-			// Right segment of K
-			ll right = (x * (x + 1)) / 2;
-			if (n - k >= x)right += (n - (k + x));
-			else {
-				ll y = x - (n - k);
-				right -= (y * (y + 1)) / 2;
-			}
-			if (rem < right)ok = false;
-			else rem -= right;
-			// Left Segment of K
-			ll left = (x * (x + 1)) / 2;
-			if (k - 1 >= x)left += (k - 1 - x);
-			else {
-				ll y = (x - (k - 1));
-				left -= (y * (y + 1)) / 2;
-			}
-			if (rem < left)ok = false;
-			else rem -= left;
+			ll p = 1;
+			ll v = mid;
+			ll lines = v , x = (v / pow(k, p));
 
-			if (ok) {
-				ans = mid;
-				l = mid + 1;
+			while (x > 0 and lines < n) {
+				x = (v / pow(k, p));
+				lines += x;
+				p++;
 			}
-			else r = mid - 1;
+			if (lines >= n) {
+				ans = mid;
+				r = mid - 1;
+			}
+			else l = mid + 1;
 		}
 		return ans;
 	};
-	cout << ok() << nl;
+	cout << go() << nl;
 }
 int main()
 {

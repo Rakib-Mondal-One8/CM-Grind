@@ -51,6 +51,8 @@ void init_code() {
 	freopen("Error.txt", "w", stderr);
 #endif
 }
+const ll mod = 1e9 + 7;
+ll inv(ll i) {if (i == 1) return 1; return (mod - ((mod / i) * inv(mod % i)) % mod) % mod;}
 bool isPrime(ll n) {if (n <= 1)return false; if (n <= 3)return true; if (n % 2 == 0 || n % 3 == 0)return false; for (ll i = 5; i * i <= n; i += 6) {if (n % i == 0 || n % (i + 2) == 0)return false;} return true;}
 ll lcm(ll a, ll b) {return (a / __gcd(a, b)) * b;}
 int nXOR(int n) {if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 == 2)return n + 1; return 0;}
@@ -58,46 +60,43 @@ int nXOR(int n) {if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 == 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 void solve()
 {
-	ll n, m, k;
-	cin >> n >> m >> k;
+	ll n, s;
+	cin >> n >> s;
 
+	vector<ll>a(n + 1);
+	loop(i, 1, n)cin >> a[i];
+
+	ll res = 0, cost = 0;
 	auto ok = [&]() {
-		ll l = 1, r = m;
-		ll ans  = 0;
+		ll l = 1, r = 1e5 + 5;
 
 		while (l <= r) {
 			ll mid = l + (r - l) / 2;
-			ll rem = m - mid;
-			bool ok = true;
-			ll x = mid - 1;
-			// Right segment of K
-			ll right = (x * (x + 1)) / 2;
-			if (n - k >= x)right += (n - (k + x));
-			else {
-				ll y = x - (n - k);
-				right -= (y * (y + 1)) / 2;
-			}
-			if (rem < right)ok = false;
-			else rem -= right;
-			// Left Segment of K
-			ll left = (x * (x + 1)) / 2;
-			if (k - 1 >= x)left += (k - 1 - x);
-			else {
-				ll y = (x - (k - 1));
-				left -= (y * (y + 1)) / 2;
-			}
-			if (rem < left)ok = false;
-			else rem -= left;
+			ll balance = s, cnt = 0;
 
-			if (ok) {
-				ans = mid;
+			vector<ll>tmp = a;
+			loop(i, 1, n)tmp[i] += (i * mid);
+			sort(tmp.begin(), tmp.end());
+
+			loop(i, 1, n) {
+				ll x = tmp[i];
+				if (x <= balance && cnt < mid) {
+					balance -= x;
+					cnt++;
+				}
+				else break;
+			}
+			if (cnt == mid) {
+				res = mid;
+				cost = (s - balance);
 				l = mid + 1;
 			}
 			else r = mid - 1;
 		}
-		return ans;
+		return 0;
 	};
-	cout << ok() << nl;
+	ok();
+	cout << res << " " << cost << nl;
 }
 int main()
 {

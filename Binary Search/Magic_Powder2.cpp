@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
-/*Problem Link -> */
+/*Problem Link -> https://codeforces.com/contest/670/problem/D2*/
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
@@ -51,6 +51,8 @@ void init_code() {
 	freopen("Error.txt", "w", stderr);
 #endif
 }
+const ll mod = 1e9 + 7;
+ll inv(ll i) {if (i == 1) return 1; return (mod - ((mod / i) * inv(mod % i)) % mod) % mod;}
 bool isPrime(ll n) {if (n <= 1)return false; if (n <= 3)return true; if (n % 2 == 0 || n % 3 == 0)return false; for (ll i = 5; i * i <= n; i += 6) {if (n % i == 0 || n % (i + 2) == 0)return false;} return true;}
 ll lcm(ll a, ll b) {return (a / __gcd(a, b)) * b;}
 int nXOR(int n) {if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 == 2)return n + 1; return 0;}
@@ -58,44 +60,44 @@ int nXOR(int n) {if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 == 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 void solve()
 {
-	ll n, m, k;
-	cin >> n >> m >> k;
+	ll n, k;
+	cin >> n >> k;
+
+	vector<ll>a(n), b(n);
+	loop(i, 0, n - 1)cin >> a[i];
+	loop(i, 0, n - 1)cin >> b[i];
 
 	auto ok = [&]() {
-		ll l = 1, r = m;
-		ll ans  = 0;
-
+		ll l = 1, r = 1e18 + 5;
+		ll ans = 0;
 		while (l <= r) {
 			ll mid = l + (r - l) / 2;
-			ll rem = m - mid;
+			ll magic = k;
 			bool ok = true;
-			ll x = mid - 1;
-			// Right segment of K
-			ll right = (x * (x + 1)) / 2;
-			if (n - k >= x)right += (n - (k + x));
-			else {
-				ll y = x - (n - k);
-				right -= (y * (y + 1)) / 2;
+			vector<ll>need = a;
+			vector<ll>have = b;
+			for (int i = 0; i < n; i++) {
+				ll x = (mid * need[i]);
+				if (x >= 0 && x <= (magic + have[i])) {
+					if (x >= have[i]) {
+						x -= have[i];
+						have[i] = 0;
+						magic -= x;
+					}
+					else have[i] -= x;
+				}
+				else {
+					ok = false;
+					break;
+				}
 			}
-			if (rem < right)ok = false;
-			else rem -= right;
-			// Left Segment of K
-			ll left = (x * (x + 1)) / 2;
-			if (k - 1 >= x)left += (k - 1 - x);
-			else {
-				ll y = (x - (k - 1));
-				left -= (y * (y + 1)) / 2;
-			}
-			if (rem < left)ok = false;
-			else rem -= left;
-
 			if (ok) {
 				ans = mid;
 				l = mid + 1;
 			}
 			else r = mid - 1;
 		}
-		return ans;
+		return ans ;
 	};
 	cout << ok() << nl;
 }
