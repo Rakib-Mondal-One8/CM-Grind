@@ -1,1 +1,2 @@
-Time: 2 ms
+n = 499 
+Time: 352 ms

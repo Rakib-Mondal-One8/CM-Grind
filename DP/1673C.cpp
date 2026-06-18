@@ -30,53 +30,68 @@ int nXOR(int n) { if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 ==
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 /*_________________________________________________________________________________________________________________________________________________________________________________________________________________________*/
 
-const int N = 1e6 + 7;
+const int X = 40005;
+const int N = 500;
+vector<vector<int>>dp(N + 1, vector<int>(X + 1));
+
+int reverse(int val) {
+	int res = 0;
+	while (val > 0) {
+		int lastDigit = val % 10;
+		res = res * 10 + lastDigit;
+		val /= 10;
+	}
+	return res;
+}
+bool isPalindrome(int val) {
+	return reverse(val) == val;
+}
+void go() {
+	vector<int>a;
+	for (int i = 1; i < X; i++) {
+		if (isPalindrome(i))a.push_back(i);
+	}
+
+	int n = sz(a);
+	debug(n);
+	for (int i = n - 1; i >= 0 ; i--) {
+		for (int j = 0; j <= X; j++) {
+
+			//Base
+			if (j == 0) {
+				dp[i][j] = 1;
+				continue;
+			}
+
+			int optionA = 0;
+			if (a[i] <= j)
+				optionA = dp[i][j - a[i]];
+			int optionB = dp[i + 1][j];
+
+			dp[i][j] = (optionA + optionB) % mod;
+		}
+	}
+
+}
+
 void RakibOne8()
 {
-	int n;
-	cin >> n;
-
-	vector<int>b(N);
-
-	for (int i = 0; i < n; i++) {
-		int x;
-		cin >> x;
-
-		cin >> b[x];
-	}
-
+	int x;
+	cin >> x;
 	/*
-	dp[i] = maximum no. of x that can be select from 0to ith element
+	dp[i][j] = total no. of distinct way to get sum = j from ith to 180th all palindromic
+	value
 	*/
-
-
-	vector<int>dp(N);
-	if (b[0] > 0) dp[0] = 1;
-
-
-	int mx = 0;
-	for (int i = 1; i < N; i++) {
-		if (b[i] == 0) {
-			dp[i] = dp[i - 1];
-		}
-		else {
-			if (b[i] >= i)dp[i] = 1;
-			else {
-				dp[i] = dp[i - b[i] - 1] + 1;
-			}
-		}
-		if (dp[i] > mx) mx = dp[i];
-	}
-
-	cout << n - mx << nl;
+	cout << dp[0][x] << nl;
 }
 int32_t main()
 {
 	init_code();
 	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 	int t = 1;
-	// cin >> t;
+	cin >> t;
 	auto start1 = high_resolution_clock::now();
+	go();
 	while (t--)
 	{
 		RakibOne8();
