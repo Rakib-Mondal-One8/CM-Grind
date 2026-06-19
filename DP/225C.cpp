@@ -30,68 +30,81 @@ int nXOR(int n) { if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 ==
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 /*_________________________________________________________________________________________________________________________________________________________________________________________________________________________*/
 
-const int X = 40005;
-const int N = 500;
-vector<vector<int>>dp(N + 1, vector<int>(X + 1));
-
-int reverse(int val) {
-	int res = 0;
-	while (val > 0) {
-		int lastDigit = val % 10;
-		res = res * 10 + lastDigit;
-		val /= 10;
-	}
-	return res;
+bool inRange(int width, int x, int y) {
+	if (width < x || width < y)return true;
+	else return false;
 }
-bool isPalindrome(int val) {
-	return reverse(val) == val;
-}
-void go() {
-	vector<int>a;
-	for (int i = 1; i < X; i++) {
-		if (isPalindrome(i))a.push_back(i);
-	}
+void RakibOne8()
+{
+	int n, m, x, y;
+	cin >> n >> m >> x >> y;
 
-	int n = sz(a);
-	debug(n);
-	for (int i = n - 1; i >= 0 ; i--) {
-		for (int j = 0; j <= X; j++) {
+	// 0 -> .
+	// 1 -> #
+	vector<vector<int>>cost(m + 1, vector<int>(2));
 
-			//Base
-			if (j == 0) {
-				dp[i][j] = 1;
-				continue;
+	for (int i = 0; i < n; i++) {
+		string s;
+		cin >> s;
+
+
+		for (int j = 0; j < m; j++) {
+			if (s[j] == '.') {
+				cost[j + 1][0]++;
 			}
-
-			int optionA = 0;
-			if (a[i] <= j)
-				optionA = dp[i][j - a[i]];
-			int optionB = dp[i + 1][j];
-
-			dp[i][j] = (optionA + optionB) % mod;
+			else {
+				cost[j + 1][1]++;
+			}
 		}
 	}
 
-}
+	vector<int>prefZero(m + 1);
+	vector<int>prefOne(m + 1);
 
-void RakibOne8()
-{
-	int x;
-	cin >> x;
+	for (int i = 1; i <= m; i++) {
+		prefZero[i] = prefZero[i - 1] + cost[i][0];
+		prefOne[i] = prefOne[i - 1] + cost[i][1];
+	}
+
+	debug(prefOne, prefZero);
+
 	/*
-	dp[i][j] = total no. of distinct way to get sum = j from ith to 500th all palindromic
-	value
+	dp[i][j] = minimum changes from 0th to ith column such that current column type is j
 	*/
-	cout << dp[0][x] << nl;
+
+	const int INF = 1e18;
+	vector<vector<int>>dp(m + 1, vector<int>(2, INF));
+	//Base
+	dp[0][0] = 0;
+	dp[0][1] = 0;
+
+
+	for (int i = 1; i <= m; i++) {
+		for (int j = 0; j <= 1; j++) {
+
+			int result = INF;
+			for (int range = x; range <= y; range++) {
+				if (range <= i) {
+					int c = (j ? prefZero[i] - prefZero[i - range] : prefOne[i] - prefOne[i - range]);
+					result = min(result, dp[i - range][j ? 0 : 1] + c);
+				}
+
+			}
+
+			dp[i][j] = result;
+
+		}
+	}
+	cout << min(dp[m][0], dp[m][1]) << nl;
+
 }
 int32_t main()
 {
 	init_code();
 	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 	int t = 1;
-	cin >> t;
+	// cin >> t;
 	auto start1 = high_resolution_clock::now();
-	go();
 	while (t--)
 	{
 		RakibOne8();
