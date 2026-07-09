@@ -32,34 +32,43 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 void RakibOne8()
 {
-	int n;
-	cin >> n;
+	string s;
+	cin >> s;
 
+	for (auto c : s) {
+		if (c == 'm' || c == 'w') {
+			cout << 0 << nl;
+			return;
+		}
+	}
+	int n = sz(s);
 
-	vector<vector<int>>edges(n + 1);
+	vector<vector<int>>dp(n + 1, vector<int>(27));
 
-	for (int i = 1; i < n; i++) {
-		int u, v;
-		cin >> u >> v;
+	/*
+	dp[i][c] = no. of strings that can be made from
+	ith character to n-1th character such that previous character
+	is c
+	*/
 
-		edges[u].push_back(v);
-		edges[v].push_back(u);
+	//Base
+	for (int i = 0; i < 26; i++)dp[n][i] = 1;
 
+	for (int i = n - 1; i >= 0; i--) {
+		for (char j = 'a'; j <= 'z'; j++) {
+
+			int res = dp[i + 1][s[i] - 'a'];
+
+			if (s[i] == 'n' && j == 'n') res = ( res + dp[i + 1]['m' - 'a']) % mod;
+			if (s[i] == 'u' && j == 'u') res = (res + dp[i + 1]['w' - 'a']) % mod;
+
+			dp[i][j - 'a'] = res;
+		}
 	}
 
-	auto dfs = [&](auto && self, int cur, int parent) -> long double{
-		long double ans = 0;
+	debug(dp);
 
-		for (auto child : edges[cur]) {
-			if (child != parent) {
-				ans += self(self, child, cur) + 1;
-			}
-		}
-		long double de = (parent == -1) ? sz(edges[cur]) : sz(edges[cur]) - 1;
-
-		return ((ans) ? (ans / de) : ans);
-	};
-	cout << fixed << setprecision(12) << dfs(dfs, 1, -1) << nl;
+	cout << dp[0][0] << nl;
 }
 int32_t main()
 {
