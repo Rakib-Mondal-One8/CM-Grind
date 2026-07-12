@@ -32,41 +32,27 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 void RakibOne8()
 {
-	string s;
-	cin >> s;
+	int n, k;
+	cin >> n >> k;
 
-	for (auto c : s) {
-		if (c == 'm' || c == 'w') {
-			cout << 0 << nl;
-			return;
+	vector<int>a(n);
+	for (int i = 0; i < n; i++)cin >> a[i];
+
+	vector<int>dp(n, INT_MAX);
+	dp[0] = 0;
+	for (int i = 1; i < n; i++) {
+		for (int j = 1; j <= k; j++) {
+			int res = INT_MAX;
+			if (i - j >= 0) {
+				res = min(res, abs(a[i] - a[i - j]) + dp[i - j]);
+			}
+			debug(i, res);
+			dp[i] = min(dp[i], res);
 		}
 	}
-	int n = sz(s);
+	debug(dp);
 
-	vector<vector<int>>dp(n + 1, vector<int>(27));
-
-	/*
-	dp[i][c] = no. of strings that can be made from
-	ith character to n-1th character such that previous character
-	is c
-	*/
-
-	//Base
-	for (int i = 0; i < 26; i++)dp[n][i] = 1;
-
-	for (int i = n - 1; i >= 0; i--) {
-		for (char j = 'a'; j <= 'z'; j++) {
-
-			int res = dp[i + 1][s[i] - 'a'];
-
-			if (s[i] == 'n' && j == 'n') res = ( res + dp[i + 1]['m' - 'a']) % mod;
-			if (s[i] == 'u' && j == 'u') res = (res + dp[i + 1]['w' - 'a']) % mod;
-
-			dp[i][j - 'a'] = res;
-		}
-	}
-
-	cout << dp[0][0] << nl;
+	cout << dp[n - 1] << nl;
 }
 int32_t main()
 {
