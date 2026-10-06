@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define int long long
+#define double long double
 #define sz(x) ((int)(x).size())
 #define nl '\n'
 #ifdef Rakib_18
@@ -10,7 +11,7 @@ using namespace std;
 #endif
 void init_code() {
 #ifdef Rakib_18
-	freopen("Error.txt", "w", stderr);
+    //freopen("in.txt", "r", stdin);
 #endif
 }
 using namespace chrono;
@@ -30,56 +31,43 @@ int nXOR(int n) { if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 ==
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 /*_________________________________________________________________________________________________________________________________________________________________________________________________________________________*/
 
-void RakibOne8()
-{
-	int n;
-	cin >> n;
+void RakibOne8() {
+    int n, m, k;
+    cin >> n >> m >> k;
 
-	vector<vector<int>>edges(n + 1);
-	for (int i = 2; i <= n; i++) {
-		int p;
-		cin >> p;
+    vector<int>v1(n), v2(m);
+    for (auto &x : v1)cin >> x;
+    for (auto &x : v2)cin >> x;
 
-		edges[p].push_back(i);
-		edges[i].push_back(p);
-	}
+    sort(v1.begin(), v1.end());
+    sort(v2.rbegin(), v2.rend());
 
-	vector<int>dp(n + 1); // dp[i] = highest distance from i to leaf
-	int answer = 0;
-	auto dfs = [&](auto && self, int node, int parent)->void{
-		int mx = 0, smx = 0;
+    if (v1[0] < v2[0])swap(v1[0], v2[0]);
 
-		for (auto i : edges[node]) {
-			if (i != parent) {
-				self(self, i, node);
+    if (k % 2 == 0) {
+        sort(v1.rbegin(), v1.rend());
+        sort(v2.begin(), v2.end());
 
-				int depth = dp[i] + 1;
-				if (depth >= mx)smx = mx, mx = depth;
-				else smx = max(smx, depth);
-			}
-		}
-		dp[node] = mx; // higest depth from node i
-		answer += (smx + 1);
-	};
-	dfs(dfs, 1, -1);
+        if (v2[0] < v1[0])swap(v1[0], v2[0]);
+    }
+    cout << accumulate(v1.begin(), v1.end(), 0LL) << nl;
 
-	cout << answer << nl;
+
+
 }
-int32_t main()
-{
-	init_code();
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-	int t = 1;
-	cin >> t;
-	auto start1 = high_resolution_clock::now();
-	while (t--)
-	{
-		RakibOne8();
-	}
-	auto stop1 = high_resolution_clock::now();
-	auto duration = duration_cast<microseconds>(stop1 - start1);
+int32_t main() {
+    init_code();
+    ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    int t = 1;
+    cin >> t;
+    auto start1 = high_resolution_clock::now();
+    while (t--) {
+        RakibOne8();
+    }
+    auto stop1 = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop1 - start1);
 #ifdef Rakib_18
-	cerr << "Time: " << duration . count() / 1000 << " ms" << endl;
+    cerr << "Time: " << duration . count() / 1000 << " ms" << endl;
 #endif
-	return 0;
+    return 0;
 }

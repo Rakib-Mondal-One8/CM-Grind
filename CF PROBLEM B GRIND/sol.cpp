@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define int long long
+#define double long double
 #define sz(x) ((int)(x).size())
 #define nl '\n'
 #ifdef Rakib_18
@@ -10,7 +11,7 @@ using namespace std;
 #endif
 void init_code() {
 #ifdef Rakib_18
-	freopen("Error.txt", "w", stderr);
+	//freopen("in.txt", "r", stdin);
 #endif
 }
 using namespace chrono;
@@ -33,44 +34,21 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 void RakibOne8()
 {
 	int n;
-	cin >> n;
+	cin>>n;
 
-	vector<vector<int>>edges(n + 1);
-	for (int i = 2; i <= n; i++) {
-		int p;
-		cin >> p;
 
-		edges[p].push_back(i);
-		edges[i].push_back(p);
-	}
+	vector<int>v1(n);
+	for(auto &x:v1)cin>>x;
 
-	vector<int>dp(n + 1); // dp[i] = highest distance from i to leaf
-	int answer = 0;
-	auto dfs = [&](auto && self, int node, int parent)->void{
-		int mx = 0, smx = 0;
-
-		for (auto i : edges[node]) {
-			if (i != parent) {
-				self(self, i, node);
-
-				int depth = dp[i] + 1;
-				if (depth >= mx)smx = mx, mx = depth;
-				else smx = max(smx, depth);
-			}
-		}
-		dp[node] = mx; // higest depth from node i
-		answer += (smx + 1);
-	};
-	dfs(dfs, 1, -1);
-
-	cout << answer << nl;
+	for(auto x:v1)cout<<x<<" ";
+		cout<<nl;
 }
 int32_t main()
 {
 	init_code();
 	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 	int t = 1;
-	cin >> t;
+	// cin >> t;
 	auto start1 = high_resolution_clock::now();
 	while (t--)
 	{
