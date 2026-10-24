@@ -67,7 +67,7 @@ void RakibOne8() {
     for (auto &x : v)cin >> x;
 
     go();
-    vector<int>fact = primeFactorization(20);
+
 }
 int32_t main() {
     init_code();

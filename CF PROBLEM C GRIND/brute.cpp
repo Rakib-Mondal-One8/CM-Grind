@@ -1,55 +1,60 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-typedef long long ll;
-typedef unsigned long long ull;
-typedef long double lld;
-#define fastio() ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL)
-#define pi pair<int, int>
-#define pll pair<ll, ll>
-#define Yes cout << "YES" << '\n'
-#define No cout << "NO" << '\n'
-#define nl '\n'
-#define loop(i, s, n) for (ll i = s; i <= n; i++)
-#define sz(x) ((int)(x).size())
 using namespace std;
-using namespace __gnu_pbds;
-template <typename T>
-using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-template <typename T>
-using pbdms = tree<T, null_type, less_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
+#define int long long
+#define double long double
+#define sz(x) ((int)(x).size())
+#define nl '\n'
 #ifdef Rakib_18
-#include "DEBUG_TEMPLATE.h"
+#include "debug.hpp"
 #else
-#define HERE
-#define debug(args...)
+#define debug(...)
 #endif
-const ll mod = 1e9 + 7;
-ll expo(ll a, ll b, ll mod) { ll res = 1; while (b > 0) { if (b & 1)res = (res * a) % mod; a = (a * a) % mod; b = b >> 1; } return res; }
-ll mminvprime(ll a, ll b) { return expo(a, b - 2, b); }
-ll inv(ll i) { if (i == 1) return 1; return (mod - ((mod / i) * inv(mod % i)) % mod) % mod; }
-bool isPrime(ll n) { if (n <= 1)return false; if (n <= 3)return true; if (n % 2 == 0 || n % 3 == 0)return false; for (ll i = 5; i * i <= n; i += 6) { if (n % i == 0 || n % (i + 2) == 0)return false; } return true; }
-ll lcm(ll a, ll b) { return (a / __gcd(a, b)) * b; }
-ll mod_add(ll a, ll b, ll m) { a = a % m; b = b % m; return (((a + b) % m) + m) % m; }
-ll mod_mul(ll a, ll b, ll m) { a = a % m; b = b % m; return (((a * b) % m) + m) % m; }
-ll mod_sub(ll a, ll b, ll m) { a = a % m; b = b % m; return (((a - b) % m) + m) % m; }
-ll mod_div(ll a, ll b, ll m) { a = a % m; b = b % m; return (mod_mul(a, mminvprime(b, m), m) + m) % m; }  //only for prime m
-int nXOR(int n) { if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 == 2)return n + 1; return 0; }
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-void solve()
-{
-
+void init_code() {
+#ifdef Rakib_18
+    //freopen("in.txt", "r", stdin);
+#endif
 }
-int32_t main()
-{
-    fastio();
+using namespace chrono;
+
+/*_________________________________________________________________________________________________________________________________________________________________________________________________________________________*/
+const int mod = 1e9 + 7;
+int expo(int a, int b, int mod) { int res = 1; while (b > 0) { if (b & 1)res = (res * a) % mod; a = (a * a) % mod; b = b >> 1; } return res; }
+int mminvprime(int a, int b) { return expo(a, b - 2, b); }
+int inv(int i) { if (i == 1) return 1; return (mod - ((mod / i) * inv(mod % i)) % mod) % mod; }
+bool isPrime(int n) { if (n <= 1)return false; if (n <= 3)return true; if (n % 2 == 0 || n % 3 == 0)return false; for (int i = 5; i * i <= n; i += 6) { if (n % i == 0 || n % (i + 2) == 0)return false; } return true; }
+int lcm(int a, int b) { return (a / __gcd(a, b)) * b; }
+int mod_add(int a, int b, int m) { a = a % m; b = b % m; return (((a + b) % m) + m) % m; }
+int mod_mul(int a, int b, int m) { a = a % m; b = b % m; return (((a * b) % m) + m) % m; }
+int mod_sub(int a, int b, int m) { a = a % m; b = b % m; return (((a - b) % m) + m) % m; }
+int mod_div(int a, int b, int m) { a = a % m; b = b % m; return (mod_mul(a, mminvprime(b, m), m) + m) % m; }  //only for prime m
+int nXOR(int n) { if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 == 2)return n + 1; return 0; }
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+/*_________________________________________________________________________________________________________________________________________________________________________________________________________________________*/
+
+void RakibOne8() {
+    int n, g, b;
+    cin >> n >> g >> b;
+
+    int needG = (n + 1) / 2;
+
+    int totalG = (needG / g) * (b + g);
+    totalG += (needG % g == 0 ? -b : needG % g);
+
+    cout << max(n, totalG) << '\n';
+}
+int32_t main() {
+    init_code();
+    ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
     int t = 1;
     // cin >> t;
-    while (t--)
-    {
-        solve();
+    auto start1 = high_resolution_clock::now();
+    while (t--) {
+        RakibOne8();
     }
+    auto stop1 = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop1 - start1);
+#ifdef Rakib_18
+    cerr << "Time: " << duration . count() / 1000 << " ms" << endl;
+#endif
     return 0;
 }
