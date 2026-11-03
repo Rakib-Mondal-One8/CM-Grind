@@ -30,36 +30,33 @@ int mod_div(int a, int b, int m) { a = a % m; b = b % m; return (mod_mul(a, mmin
 int nXOR(int n) { if (n % 4 == 0)return n; if (n % 4 == 1)return 1; if (n % 4 == 2)return n + 1; return 0; }
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 /*_________________________________________________________________________________________________________________________________________________________________________________________________________________________*/
+const int N = 1e5+7;
+const int inf = 1e18+7;
+vector<int>spf(N, inf);
 
-const int N = 1e5+ 7;
-const int INF = 1e18+7;
-vector<int>spf(N, INF);
 void go() {
-    vector<int>prime(N, true);
-    for (int i = 2; i < N; i++) {
-        if (prime[i]) {
-            spf[i] = i;
-            for (int j = i * i; j < N; j += i) {
-                prime[j] = false;
+    vector<bool>isPrime(N, true);
+    for (int i = 2; i <= N; i++) {
+        if (isPrime[i]) {
+            spf[i] = min(spf[i], i);
+            for (int j = i + i; j <= N; j += i) {
                 spf[j] = min(spf[j], i);
+                isPrime[j] = false;
             }
         }
     }
 }
-vector<int> primeFactorization(int x) {
+vector<int>goPrimeFactors(int x) {
     vector<int>primeFactors;
     while (x != 1) {
-        int factor = spf[x];
-        while (x % factor == 0) {
-            x /= factor;
-        }
-        primeFactors.push_back(factor);
-    }
+        int divisor = spf[x];
+        primeFactors.push_back(divisor);
 
+        while (x % divisor == 0)x /= divisor;
+    }
     return primeFactors;
 }
 void RakibOne8() {
-
     int n;
     cin >> n;
 
@@ -68,6 +65,16 @@ void RakibOne8() {
 
     go();
 
+    vector<int>dp(N);
+    for (auto x : v) {
+        vector<int>primeFactors = goPrimeFactors(x);
+        for (auto fact : primeFactors)dp[fact] += 1;
+    }
+    debug(dp);
+
+    int answer = 0;
+    for (auto val : dp)answer = max(answer, val);
+    cout << answer << nl;
 }
 int32_t main() {
     init_code();

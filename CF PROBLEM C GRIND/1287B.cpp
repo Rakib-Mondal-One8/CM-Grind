@@ -38,7 +38,14 @@ void RakibOne8() {
     vector<string>v(n);
     for (auto &x : v)cin >> x;
 
-    debug(v);
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            string tmp = "";
+            for (int k2 = 0; k2 < k; k++) {
+                if (s[i])
+                }
+        }
+    }
 }
 int32_t main() {
     init_code();
